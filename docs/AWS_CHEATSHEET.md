@@ -1,6 +1,6 @@
 # AWS products cheat sheet (AI platform engineer edition)
 
-Use this as a fast lookup when choosing services and composing Terraform in interviews or sprints. It includes "when to use", common gotchas, IAM roles, and Terraform links.
+Use this as a fast lookup when choosing services and composing Terraform in projects or sprints. It includes "when to use", common gotchas, IAM roles, and Terraform links.
 
 ## How to choose quickly
 

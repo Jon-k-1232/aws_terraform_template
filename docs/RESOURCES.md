@@ -1,6 +1,6 @@
 # Resource documentation and common properties
 
-This sheet links to the official Terraform docs and highlights common arguments/attributes you’ll likely reference during an interview.
+This sheet links to the official Terraform docs and highlights common arguments/attributes you’ll likely reference during projects.
 
 ## Providers and settings
 

@@ -1,0 +1,34 @@
+flowchart LR
+  subgraph Account[AWS Account]
+    subgraph VPC[VPC]
+      SG[(Security Group\nEgress All + SSH example)]
+      Subnet[Public Subnet]
+      RT[Route Table -> IGW]
+      IGW[Internet Gateway]
+
+      SG --> Subnet
+      Subnet --> RT
+      RT --> IGW
+
+      %% Optional VPC endpoints (enhancements)
+      S3GW[S3 VPC Endpoint - Gateway\noptional]
+      SMIF[Secrets Manager VPC Endpoint - Interface\noptional]
+      S3GW -.-> RT
+      SMIF -.-> Subnet
+      SMIF -.-> SG
+    end
+
+    S3[(Artifacts Bucket\nVersioning + Lifecycle)]
+    Role[(IAM Role)]
+    SM[(Secrets Manager\nSecrets from var.secrets)]
+
+    %% Optional KMS CMK for SSE-KMS (enhancement)
+    KMS[KMS CMK for S3 and Secrets\noptional]
+  end
+
+  Role --> S3
+  Role --> SM
+
+  %% Optional SSE-KMS links
+  KMS -.-> S3
+  KMS -.-> SM

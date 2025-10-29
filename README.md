@@ -1,6 +1,6 @@
 ## Terraform AWS Template (Multi-Environment, Terraform Cloud state)
 
-This is a reusable, interview-ready Terraform template for AWS. It’s organized by environment (e.g., `dev`, `prod`) and by concern (providers, variables, network, storage, IAM, secrets, outputs).
+This is a reusable Terraform template for AWS. It’s organized by environment (e.g., `dev`, `prod`) and by concern (providers, variables, network, storage, IAM, secrets, outputs).
 
 -  State is managed in Terraform Cloud (per environment folder).
 -  Secrets are handled via AWS Secrets Manager and sensitive variables (`TF_VAR_...`).
@@ -18,7 +18,7 @@ This is a reusable, interview-ready Terraform template for AWS. It’s organized
 
 ### Commenting and readability
 
-This template is intentionally commented so you can speak to the “why” in an interview:
+This template is intentionally commented so you can explain the “why” and rationale:
 
 -  Each `.tf` file begins with quick links to the official docs for that concern.
 -  Provider blocks and locals explain how region and naming/tags are derived.
@@ -154,20 +154,54 @@ This stack lays down a minimal, production-leaning foundation you can extend qui
 flowchart LR
    subgraph Account[AWS Account]
       subgraph VPC[VPC]
+         SG[(Security Group\nEgress All + SSH example)]
          Subnet[Public Subnet]
          RT[Route Table -> IGW]
-         SG[(Security Group\nEgress All + SSH example)]
+         IGW[Internet Gateway]
+
+         SG --> Subnet
+         Subnet --> RT
+         RT --> IGW
+
+         %% Optional VPC endpoints (enhancements)
+      S3GW[S3 VPC Endpoint - Gateway\noptional]
+      SMIF[Secrets Manager VPC Endpoint - Interface\noptional]
+         S3GW -.-> RT
+         SMIF -.-> Subnet
+         SMIF -.-> SG
       end
 
       S3[(Artifacts Bucket\nVersioning + Lifecycle)]
       Role[(IAM Role)]
       SM[(Secrets Manager\nSecrets from var.secrets)]
+
+      %% Optional KMS CMK for SSE-KMS (enhancement)
+      KMS[KMS CMK for S3 and Secrets\noptional]
    end
 
-   Subnet --> RT
-   SG --> Subnet
    Role --> S3
    Role --> SM
+
+   %% Optional SSE-KMS links
+   KMS -.-> S3
+   KMS -.-> SM
+```
+
+Rendered image (optional)
+
+![AWS architecture enhanced](docs/diagrams/aws_architecture.png)
+
+How to export the diagram as PNG/SVG locally (optional):
+
+```bash
+# Install Mermaid CLI if needed
+npm install -g @mermaid-js/mermaid-cli
+
+# Export to PNG (from the repo root)
+mmdc -i docs/diagrams/aws_architecture.mmd -o docs/diagrams/aws_architecture.png
+
+# Or export to SVG
+mmdc -i docs/diagrams/aws_architecture.mmd -o docs/diagrams/aws_architecture.svg
 ```
 
 Notes:
