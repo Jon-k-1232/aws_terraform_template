@@ -1,0 +1,39 @@
+# Example values for the prod environment
+# Copy to terraform.tfvars and customize. Do not commit terraform.tfvars.
+
+region      = "us-east-1"
+environment = "prod"
+
+# Optional naming prefix. If empty, defaults to environment (e.g., "prod").
+naming_prefix = "prod-ai"
+
+additional_tags = {
+  app         = "ai-template"
+  cost_center = "example"
+}
+
+# Network
+vpc_cidr     = "10.20.0.0/16"
+subnet_cidr  = "10.20.0.0/24"
+allowed_ssh_cidrs = ["0.0.0.0/0"]
+
+# Storage
+# Leave s3_bucket_name empty to auto-generate a name
+#s3_bucket_name = ""
+s3_force_destroy = false
+
+# IAM
+iam_role_name           = "ai-app-role"
+iam_role_trust_service  = "ec2.amazonaws.com"
+# Example: attach AWS managed S3 read-only policy
+# iam_role_policy_arns = [
+#   "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+# ]
+
+# Secrets (use TF_VAR_ prefixed environment variables to provide values securely)
+# Example: export TF_VAR_secrets='{ "openai_api_key": "..." }'
+# Or set in terraform.tfvars (not recommended for real secrets)
+# Map key becomes part of the secret name: <naming_prefix>-<key>
+#secrets = {
+#  openai_api_key = "REPLACE_ME"
+#}
